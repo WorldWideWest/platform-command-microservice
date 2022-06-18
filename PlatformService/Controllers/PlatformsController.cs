@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Models.DTOs;
 using PlatformService.Models.Entities;
 using PlatformService.Models.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PlatformService.Controllers{
     
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Produces("application/json")]
     public class PlatformsController : ControllerBase{
         private readonly IPlatformRepository _repository;
         private readonly IMapper _mapper;
@@ -22,6 +24,8 @@ namespace PlatformService.Controllers{
         }        
 
         [HttpGet]
+        [SwaggerResponse(StatusCodes.Status200OK, "Get All Platofrms", typeof(IEnumerable<PlatformResponseDTO>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Get All Platofrms")]
         public ActionResult<IEnumerable<PlatformResponseDTO>> GetPlatforms(){
 
             try
@@ -67,7 +71,7 @@ namespace PlatformService.Controllers{
             }
             catch (Exception ex)
             {
-                _logger.LogError("GET:/Platform", ex);
+                _logger.LogError("POST:/Platform", ex);
                 throw;
             }
         }
