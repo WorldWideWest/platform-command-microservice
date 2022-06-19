@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Models.DTOs;
 using PlatformService.Models.Entities;
 using PlatformService.Models.Interfaces;
+using PlatformService.SyncDataService.Http;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PlatformService.Controllers{
@@ -15,12 +16,19 @@ namespace PlatformService.Controllers{
         private readonly IPlatformRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<PlatformsController> _logger;
+        private readonly ICommandDataClient _client;
 
-        public PlatformsController(IPlatformRepository repository, IMapper mapper, ILogger<PlatformsController> logger)
+        public PlatformsController(
+            IPlatformRepository repository,
+            IMapper mapper, 
+            ILogger<PlatformsController> logger,
+            ICommandDataClient client
+            )
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _client = client;
         }        
 
         [HttpGet]
@@ -43,6 +51,8 @@ namespace PlatformService.Controllers{
         }
 
         [HttpGet("{id}", Name = "GetPlatform")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Get Platofrm by id", typeof(PlatformResponseDTO))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Platform not found")]
         public ActionResult<PlatformResponseDTO> GetPlatform(Guid id){
             try
             {
@@ -59,7 +69,9 @@ namespace PlatformService.Controllers{
         }
 
         [HttpPost]
-        public ActionResult<PlatformResponseDTO> CreatePlatform(PlatformRequestDTO request){
+        [SwaggerResponse(StatusCodes.Status201Created, "Platform Create Successfuly", typeof(PlatformResponseDTO))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request")]
+        public async Task<ActionResult<PlatformResponseDTO>> CreatePlatform(PlatformRequestDTO request){
             try
             {
                 var model = _mapper.Map<Platform>(request);
@@ -67,6 +79,17 @@ namespace PlatformService.Controllers{
                 _repository.SaveChanges();
 
                 var platform = _mapper.Map<PlatformResponseDTO>(model);
+
+                try
+                {
+                    await _client.SendPlatformToCommand(platform);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    throw;
+                }
+
                 return CreatedAtRoute(nameof(GetPlatform), new { id = platform.Id }, platform);
             }
             catch (Exception ex)

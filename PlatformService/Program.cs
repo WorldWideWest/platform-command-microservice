@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PlatformService.Databse;
 using PlatformService.Databse.Repository;
 using PlatformService.Models.Interfaces;
+using PlatformService.SyncDataService.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
 builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddApiVersioning();
+builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
