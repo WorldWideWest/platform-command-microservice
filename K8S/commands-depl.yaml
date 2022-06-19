@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: platforms-deployment
+  name: commands-deployment
 spec:
   replicas: 1
   selector: 
     matchLabels:
-      app: platformservice
+      app: commandservice
   template:
     metadata:
       labels:
-        app: platformservice
+        app: commandservice
     spec:
       containers:
-        - name: platformservice
-          image: dzenoworldwidewest/platformservice:latest
+        - name: commandservice
+          image: dzenoworldwidewest/commandservice:latest
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: platofrm-clusterip-service
+  name: command-clusterip-service
 spec:
   type: ClusterIP
   selector:
-    app: platformservice
+    app: commandservice
   ports:
-    - name: platformservice
+    - name: commandservice
       protocol: TCP
       port: 80
       targetPort: 80
