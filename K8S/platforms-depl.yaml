@@ -19,7 +19,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: platofrm-clusterip-service
+  name: platform-clusterip-service
 spec:
   type: ClusterIP
   selector:
