@@ -60,6 +60,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-ApplicationDbContextData.Setup(app);
+ApplicationDbContextData.Setup(app, env.IsProduction());
 
 app.Run();
