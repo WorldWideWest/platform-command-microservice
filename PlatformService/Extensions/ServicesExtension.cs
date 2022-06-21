@@ -7,7 +7,6 @@ using PlatformService.SyncDataService.Http;
 namespace PlatformService.Extensions{
     public static class ServicesExtension{
 
-
         public static IServiceCollection AddServices(this IServiceCollection services, WebApplicationBuilder builder){
             
             if(builder.Environment.IsProduction())
