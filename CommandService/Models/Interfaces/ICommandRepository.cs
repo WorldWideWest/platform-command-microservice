@@ -1,7 +1,7 @@
 using CommandService.Models.Entities;
 
 namespace CommandService.Models.Interfaces{
-    public interface ICommandRepositroy{
+    public interface ICommandRepository{
         bool SaveChanges();
         // Platforms
         IEnumerable<Platform> GetAllPlatforms();

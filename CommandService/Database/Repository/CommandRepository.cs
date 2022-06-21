@@ -2,7 +2,7 @@ using CommandService.Models.Entities;
 using CommandService.Models.Interfaces;
 
 namespace CommandService.Database.Repository{
-    public class CommandRepository : ICommandRepositroy
+    public class CommandRepository : ICommandRepository
     {
 
         private readonly ApplicationDbContext _context;
