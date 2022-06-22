@@ -1,3 +1,4 @@
+using CommandService.AsyncDataService;
 using CommandService.Database;
 using CommandService.Database.Repository;
 using CommandService.EventProcessor;
@@ -18,6 +19,7 @@ builder.Services.AddApiVersioning();
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseInMemoryDatabase("InMem");
 });
+builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 builder.Services.AddScoped<ICommandRepository, CommandRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

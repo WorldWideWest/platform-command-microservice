@@ -13,7 +13,7 @@ namespace CommandService.AutoMapper{
             CreateMap<Command, CommandResponseDTO>();
             CreateMap<PlatformPublishDTO, Platform>()
                 .ForMember(
-                    x => x.ExternalId, 
+                    dest => dest.ExternalId, 
                     options => options.MapFrom(src => src.Id));
         }
     }

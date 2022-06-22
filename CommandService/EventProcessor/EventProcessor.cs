@@ -24,6 +24,7 @@ namespace CommandService.EventProcessor{
                 var eventType = DetermineEvent(message);
                 switch(eventType){
                     case EventType.PlatformPublished:
+                        AddPlatform(message);
                         break;
                     default:
                         break;
@@ -41,10 +42,12 @@ namespace CommandService.EventProcessor{
             using(var scope = _scopeFactory.CreateScope())
             {
                 var repository = scope.ServiceProvider.GetRequiredService<ICommandRepository>();
-                var response = JsonSerializer.Deserialize<PlatformResponseDTO>(message);
+                var publishResponse = JsonSerializer.Deserialize<PlatformPublishDTO>(message);
+                Console.WriteLine($"-->: {publishResponse.Event} {publishResponse.Id}");
                 try
                 {
-                    var platform = _mapper.Map<Platform>(response);
+                    var platform = _mapper.Map<Platform>(publishResponse);
+                    Console.WriteLine($"_--Y>{platform.Id} {platform.Name} {platform.ExternalId}");
                     if(!repository.ExternalPlatformExists(platform.ExternalId))
                     {
                         repository.CreatePlatform(platform);
