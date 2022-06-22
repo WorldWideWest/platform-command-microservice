@@ -17,18 +17,21 @@ namespace PlatformService.Controllers{
         private readonly IMapper _mapper;
         private readonly ILogger<PlatformsController> _logger;
         private readonly ICommandDataClient _client;
+        private readonly IMessageBusClient _asyncClient;
 
         public PlatformsController(
             IPlatformRepository repository,
             IMapper mapper, 
             ILogger<PlatformsController> logger,
-            ICommandDataClient client
+            ICommandDataClient client,
+            IMessageBusClient asyncClient
             )
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _client = client;
+            _asyncClient = asyncClient;
         }        
 
         [HttpGet]
@@ -78,11 +81,25 @@ namespace PlatformService.Controllers{
                 _repository.CreatePlatform(model);
                 _repository.SaveChanges();
 
-                var platform = _mapper.Map<PlatformResponseDTO>(model);
+                var response = _mapper.Map<PlatformResponseDTO>(model);
 
+                // Sync Message
+                // try
+                // {
+                //     await _client.SendPlatformToCommand(platform);
+                // }
+                // catch (Exception ex)
+                // {
+                //     _logger.LogError(ex.ToString());
+                //     throw;
+                // }
+
+                // Async Message
                 try
                 {
-                    await _client.SendPlatformToCommand(platform);
+                    var platform = _mapper.Map<PlatformPublishDTO>(response);
+                    platform.Event = "Platform Published";
+                    _asyncClient.PublishNewPlatform(platform);
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +107,7 @@ namespace PlatformService.Controllers{
                     throw;
                 }
 
-                return CreatedAtRoute(nameof(GetPlatform), new { id = platform.Id }, platform);
+                return CreatedAtRoute(nameof(GetPlatform), new { id = response.Id }, response);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PlatformService.AsyncDataService;
 using PlatformService.Databse;
 using PlatformService.Databse.Repository;
 using PlatformService.Models.Interfaces;
@@ -21,7 +22,8 @@ namespace PlatformService.Extensions{
                     options.UseInMemoryDatabase("InMem");
                 });
             }
-
+            
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
             services.AddScoped<IPlatformRepository, PlatformRepository>();
             services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
             services.AddSwaggerConfiguration();
