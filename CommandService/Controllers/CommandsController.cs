@@ -63,7 +63,6 @@ namespace CommandService.Controllers{
         public ActionResult<CommandResponseDTO> CreateCommandForPlatform(Guid platformId, CommandRequestDTO request){
             try
             {
-
                 if(!_repository.PlatformExists(platformId))
                     return NotFound(platformId);
                 
