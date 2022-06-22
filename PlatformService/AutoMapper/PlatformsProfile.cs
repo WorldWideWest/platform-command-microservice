@@ -9,6 +9,7 @@ namespace PlatformService.AutoMapper{
             // Source -> Target
             CreateMap<Platform, PlatformResponseDTO>();
             CreateMap<PlatformRequestDTO, Platform>();
+            CreateMap<PlatformResponseDTO, PlatformPublishDTO>();
         }
     }
 }
