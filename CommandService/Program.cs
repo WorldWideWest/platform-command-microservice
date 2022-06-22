@@ -1,5 +1,6 @@
 using CommandService.Database;
 using CommandService.Database.Repository;
+using CommandService.EventProcessor;
 using CommandService.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ builder.Services.AddApiVersioning();
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseInMemoryDatabase("InMem");
 });
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 builder.Services.AddScoped<ICommandRepository, CommandRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

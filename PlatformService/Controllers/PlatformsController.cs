@@ -98,7 +98,7 @@ namespace PlatformService.Controllers{
                 try
                 {
                     var platform = _mapper.Map<PlatformPublishDTO>(response);
-                    platform.Event = "Platform Published";
+                    platform.Event = "PlatformPublished";
                     _asyncClient.PublishNewPlatform(platform);
                 }
                 catch (Exception ex)

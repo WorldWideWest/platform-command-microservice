@@ -46,6 +46,19 @@ namespace CommandService.Database.Repository{
             }
         }
 
+        public bool ExternalPlatformExists(Guid id)
+        {
+            try
+            {
+                return _context.Platforms.Any(x => x.ExternalId.Equals(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, nameof(ExternalPlatformExists));
+                throw;
+            }
+        }
+
         public IEnumerable<Platform> GetAllPlatforms()
         {
             try
